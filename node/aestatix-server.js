@@ -92,9 +92,9 @@ upload(req, res, function (err) {
       console.log(JSON.stringify(err));
 //      res.status(400).send("fail saving image");
     } else {
-		console.log("file sent");
 //		callback(console.log('callback: ' + lastImageName));
-		callback(console.log('callback: ' +lastImageName ));
+		callback(console.log('image uploaded to: ' +lastImageName + '\n' + 
+													'from (client service location): ' + req.ip));
 		res.send(lastImageName);
 			
     }		
@@ -121,16 +121,24 @@ app.get('/favicon.ico', function (req, res) {
 app.use(express.static('www/stage.aestatix.com/public_html/'));
 
 function logRequest(requestURL, requestQuary, requestIp){
-	console.log("requested to: " + requestURL);				
-	console.log("client request: " + JSON.stringify( requestQuary));
-	console.log("at: " + new Date().toISOString() + "\nfrom: " + requestIp + "\n - done - \n");
+	now = new Date();
+	var zeroFroHours = '';
+	console.log("\nnew request:\n" + requestURL +  requestQuary );
+	(now.getHours() != (10 || 11 || 12) ) ? zeroFroHours = "0" : zero = "";		
+	console.log( now.getMonth() + "/" + now.getDate() + "/" + now.getFullYear() +
+							"\n" + zeroFroHours + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() +
+							"\nfrom:\n(client service location)\n" + requestIp + 
+							"\n - process done - \n");
 }
 
 var ip = process.env.IP || '127.0.0.1';
 var port = process.env.PORT || '3000';
 
 app.listen(port, () => console.log('running on port 3000'));
-console .log('\n## Hi there, Welcome to node server ##');
+	console.log('\033[2J');
+  console .log(' Hi there, Welcome to Aestatix webGL server');
+   console.log('________________________________________________________');
+  
 
 
 
