@@ -16,3 +16,12 @@
 .webgl-content .footer .webgl-logo {background-image: url('webgl-logo.png'); width: 204px; float: left;}
 .webgl-content .footer .title {margin-right: 10px; float: right;}
 .webgl-content .footer .fullscreen {background-image: url('fullscreen.png'); width: 38px; float: right;}
+/*.input-btn{background:cornflowerblue;color:white; padding: 8px 16px;}*/
+ input[type="button" i], input[type="submit" i], input[type="reset" i], input[type="file" i]::-webkit-file-upload-button, button ,#clearImage {
+    background:cornflowerblue;color:white; padding: 8px 16px;
+}
+.ui-console{ display:none; background: rgba(0, 0, 0, 0.3); border: .5px solid; border-color:rgba(255, 255, 255, 0.54); color:white; padding:10px 40px;border-radius: 3px; -moz-border-radius: 3px;  -webkit-border-radius: 3px; border-radius:3px;position:absolute; top:10px;left:10px;z-index: 10;}
+.disabledElement {
+    pointer-events: none;
+    opacity: 0.4;
+}

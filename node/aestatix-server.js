@@ -56,15 +56,15 @@ var Storage = multer.diskStorage({
 //		 			console.log("request: " + JSON.stringify(file.originalname));
 			 if(file){
 			 	var now = new Date();
-			 lastImageName = file.fieldname + "_" + now.getDate() + "_" + now.getMonth() + "_" + now.getFullYear() + "_" + now.getHours() + "_" + Math.floor( now.getMilliseconds()/60) + "_" + now.getMilliseconds()%60 + "_" + file.originalname;
+			 lastImageName = file.fieldname + "_" + now.getDate() + "_" + now.getMonth() + "_" + now.getFullYear() + "_" + now.getHours() + "_" + now.getSeconds() + "_" + now.getMilliseconds() + "_" + file.originalname;
 			 	console.log("file name:" + lastImageName);
          }
 				 
 				 callback(null, "./www/stage.aestatix.com/public_html/uploads");
      },
    filename: function(req, file, callback) {
-		 	var now = new Date();
-         callback(null, file.fieldname + "_" + now.getDate() + "_" + now.getMonth() + "_" + now.getFullYear() + "_" + now.getHours() + "_" + Math.floor( now.getMilliseconds()/60) + "_" + now.getMilliseconds()%60 + "_" + file.originalname);
+//		 	var now = new Date();
+         callback(null, lastImageName);
 				 
      }
  });
@@ -78,7 +78,7 @@ app.get('/', function (req, res) {
 });  
 
 //player route
-app.get('/player.html', function (req, res) {
+app.get('/sandbox', function (req, res) {
 	//res.send("response..: Success!! ");
 	res.sendFile("iframe-parent.html", options);
 	logRequest(req.protocol + '://' + req.get('host'),req.originalUrl,req.ip);
