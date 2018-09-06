@@ -1,9 +1,10 @@
 {
   "name": "aestatix-server",
   "version": "1.0.0",
-  "description": "dropbox like service for AWS buckets",
+  "description": "aestatix-server.js",
   "main": "dropBucket.js",
   "scripts": {
+    "start": " node aestatix-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ron@developingnow",
@@ -19,6 +20,7 @@
     "http": "0.0.0",
     "multer": "^1.3.0",
     "path": "^0.12.7",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "x-frame-options": "^1.0.0"
   }
 }

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Aestatix | webGL</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>  
+    <script src="Build/UnityLoader.js"></script>
+		 <script src="Scripts/jquery-3.1.1.min.js"></script>
+    <script src="Scripts/jquery.form.min.js"></script>
+<!--
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "/Build/AeStatix-webGL.json", {onProgress: UnityProgress});
+			
+    </script>
+-->
+    <style>
+      body{color:cornflowerblue; margin:0;padding:0;}
+			#gameContainer{border:  2px solid cornflowerblue !important; 
+			transform: scale(1) ; margin:auto;
+			}
+			.center{margin:auto!important;}
+			.upload-container{width:640px;padding-top:10px;}
+			input[name~="submit"] , input[name~="img"], #clearImage {margin:5px;}
+    </style>
+  </head>
+  <body>
+				<span class="ui-console"> still working</span>
+	<center>
+      <p style="color:white;
+                background:cornflowerblue;
+								margin:0;
+								padding:20px;" >
+								Aestatix | webGL 
+			</p>		
+			<p style="font-size:1.2em;">sandbox</p>
+    </center>
+		<div class="webgl-content" >
+      	
+				<div id="gameContainer" class="center" style="width: 640px; height: 480px;">
+				
+				</div>
+				<div class="upload-container center">
+						<div id="file-upload" class="disabledElement">
+						<form id="frmUploader" enctype="multipart/form-data" action="/upload" method="post">
+							<input type="file" name="img" /><br>
+							<input type="submit" name="submit" id="btnSubmit" value="upload" /> 
+						</form>
+						<button id="clearImage" >back to camera</button>
+						</div>
+				</div>
+				
+				
+    </div>
+		<br>	
+		
+
+
+		
+		
+<script>
+
+//    $(document).ready(function() {
+			$('#clearImage').hide();
+			
+				
+			var gameInstance = UnityLoader.instantiate("gameContainer", "Build/Aestatix-webGL-server-12-11-2017.json", {onProgress: UnityProgress});
+			console.log("UnityProgress" + UnityProgress);
+		
+        var options = {
+							beforeSubmit: showRequest, 
+							//pre-submit callback 
+							success: showResponse, 
+							// post-submit callback 
+							error: showError
+							}; 
+								
+				// bind to the form's submit event 
+				$('#frmUploader').submit(function () { 
+				$(this).ajaxSubmit(options); 
+						// always return false to prevent standard browser submit and page navigation 
+						return false; 
+				}); 
+		
+		// pre-submit callback 
+		function showRequest(formData, jqForm, options) { 
+//			alert('Uploading is starting.'); 
+				return true; 
+		} 
+		// post-submit callback 
+		function showResponse(responseText, statusText, xhr, $form) {
+				//send messesge to unity (c#) object in - pixelProcessing.cs
+				//gameInstance.SendMessage("object-name","function-name",value)
+				gameInstance.SendMessage("UnityCamera", "ImageFromWebServer",responseText);
+				$('#clearImage').attr("onclick", 'clearImage()');
+				$('#clearImage').show();
+//				alert('status: ' + statusText + '\n\nresponseText: \n' + responseText );
+				$('.ui-console').text('Image uploaded');
+				$('.ui-console').show();
+				setTimeout(function(){$('.ui-console').fadeOut()},5000)
+		}
+		function showError(responseText, statusText, xhr, err) {
+//				alert('status: ' + statusText + '\n\nresponseText: \n' + JSON.stringify( responseText.responseText) ); 
+				alert( 'images only please' ); 
+		}		
+		function clearImage(){
+				$('#clearImage').hide();
+				gameInstance.SendMessage("UnityCamera", "ClearImageFromWebServer");
+		}
+		
+		function onAlmostDoneFromUnity(){
+//				$('.ui-console').text('..almost done');
+//				$('.ui-console').show();
+//				setTimeout(function(){$('.ui-console').fadeOut()},4000);
+		}
+		
+		function onStartFromUnity(){
+				$('.ui-console').text('..almost done');
+				$('.ui-console').show();
+				setTimeout(function(){
+								$('.ui-console').fadeOut();
+								$('#file-upload').removeClass('disabledElement');
+				},2000);
+				
+		}
+		function unityProgressDone(){
+						$('.ui-console').text('..still working');
+						$('.ui-console').fadeIn();
+		}
+	
+</script>
+
+  </body>
+</html>

@@ -11,6 +11,7 @@ var cors = require('cors');
 var events = require('events');
 var multer = require('multer');
 //var bodyParser = require('body-parser');
+//var xFrameOptions = require('x-frame-options');
 
 //constructors
 var eventEmitter = new events.EventEmitter();
@@ -23,6 +24,10 @@ app.set('views', 'assets/views');
 app.use(cors({origin: '*'}));
 //app.use(fileUpload());
 
+
+//iframe header response options
+//var middleware = xFrameOptions(headerValue = 'SAMEORIGIN');
+
 //tamplate locals
 app.locals.local = 'test: success';
 app.locals.buckets = {};
@@ -34,11 +39,13 @@ var ownerName = 'Aestatix - webGL';
 //vars
 var lastImageName;
 var options = {
-    root: __dirname + '/www/stage.aestatix.com/public_html/',
-    dotfiles: 'deny',
+    root: __dirname + '/www/sci-crop.com/public_html/',
+//    dotfiles: 'deny',
     headers: {
         'x-timestamp': Date.now(),
-        'x-sent': true
+        'x-sent': true,
+		  'X-Frame-Options': 'ALLOW-FROM https://www.psykrop.com',
+		  'Content-Security-Policy': 'frame-ancestors https://www.psykrop.com'
     }
 };
 
@@ -46,7 +53,7 @@ var options = {
 const imageFilter = function (req, file, cb) {
     // accept image only
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-        return cb(new Error('Only image files please'), false);
+        return cb(new Error('incompatible encoding, please try uploading the image in a .png format'), false);
     }
     cb(null, true);
 };
@@ -60,12 +67,10 @@ var Storage = multer.diskStorage({
 			 	console.log("file name:" + lastImageName);
          }
 				 
-				 callback(null, "./www/stage.aestatix.com/public_html/uploads");
+				 callback(null, "/www/sci-crop.com/public_html/uploads");
      },
    filename: function(req, file, callback) {
-//		 	var now = new Date();
          callback(null, lastImageName);
-				 
      }
  });
 const upload = multer({ storage: Storage ,fileFilter: imageFilter}).single('img');
@@ -96,8 +101,11 @@ upload(req, res, function (err) {
 		callback(console.log('image uploaded to: ' +lastImageName + '\n' + 
 													'from (client service location): ' + req.ip));
 		res.send(lastImageName);
-			
-    }		
+		setTimeout(
+			function(){	fs.unlinkSync(__dirname + '/www/sci-crop.com/public_html/uploads/' + lastImageName);
+							console.log('image '+ lastImageName+ ' earased');
+							},5000);
+	 		}		
 	});
 //	console.log("req.file.originalname: " + lastImagePath.file);
 //    res.redirect('/');
@@ -106,19 +114,9 @@ upload(req, res, function (err) {
 //answer favicon request
 app.get('/favicon.ico', function (req, res) {
 }); 
-		
-//resopond to all other routes
-//app.get('/*', function (req, res) {
-//  console.log("requested /*undefined rout");
-//	res.send("..this was a weird rout <br>");
-//	logRequest(req.protocol + '://' + req.get('host'),req.originalUrl,req.ip);
-//
-//});  
-
-
 
 //serve static
-app.use(express.static('www/stage.aestatix.com/public_html/'));
+app.use(express.static('www/sci-crop.com/public_html/'));
 
 function logRequest(requestURL, requestQuary, requestIp){
 	now = new Date();
