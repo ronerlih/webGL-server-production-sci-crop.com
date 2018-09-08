@@ -1,6 +1,6 @@
 node/node_modules/
 node/uploads/
-node/www/stage.aestatix.com/public_html/Build/
+#node/www/stage.aestatix.com/public_html/Build/
 node/www/sci-crop.com/public_html_current_bkp/uploads/img_11_11_2017_18_15_16_hsv.jpg
 
 node/www/sci-crop.com/public_html_current_bkp/uploads/img_11_11_2017_18_3_3_hsv.jpg
@@ -25,4 +25,4 @@ node/www/sci-crop.com/public_html_current_bkp/uploads/img_11_11_2017_19_1_41_hsv
 
 node/www/sci-crop.com/public_html_current_bkp/uploads/img_11_11_2017_19_6_11_hsv.jpg
 
-*.unityweb
+# *.unityweb

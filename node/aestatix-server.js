@@ -1,3 +1,4 @@
+var devmode = true;
 var express = require('express');
 var fileUpload = require('express-fileupload');
 var path = require('path');
@@ -38,6 +39,7 @@ var ownerName = 'Aestatix - webGL';
 
 //vars
 var lastImageName;
+//console.log("path: " + __dirname + '/www/sci-crop.com/public_html/');
 var options = {
     root: __dirname + '/www/sci-crop.com/public_html/',
 //    dotfiles: 'deny',
@@ -64,10 +66,11 @@ var Storage = multer.diskStorage({
 			 if(file){
 			 	var now = new Date();
 			 lastImageName = file.fieldname + "_" + now.getDate() + "_" + now.getMonth() + "_" + now.getFullYear() + "_" + now.getHours() + "_" + now.getSeconds() + "_" + now.getMilliseconds() + "_" + file.originalname;
-			 	console.log("file name:" + lastImageName);
+//			 	console.log("file name:" + lastImageName);
          }
 				 
-				 callback(null, "/www/sci-crop.com/public_html/uploads");
+//				 callback(null, "/www/sci-crop.com/public_html/uploads");
+				 callback(null, __dirname + "/www/sci-crop.com/public_html/uploads");
      },
    filename: function(req, file, callback) {
          callback(null, lastImageName);
