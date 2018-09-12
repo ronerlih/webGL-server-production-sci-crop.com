@@ -19,11 +19,13 @@
     <style>
       body{color:cornflowerblue; margin:0;padding:0;}
 			#gameContainer{border:  2px solid cornflowerblue !important; 
-			transform: scale(1) ; margin:auto;
-			}
-			.center{margin:auto!important;}
-			.upload-container{width:640px;padding-top:10px;}
-			input[name~="submit"] , input[name~="img"], #clearImage {margin:5px;}
+			transform: scale(1) ; margin:auto;}
+		.center{margin:auto!important;}
+		.upload-container{width:640px;padding-top:10px;}
+		input[name~="submit"] , input[name~="img"], #clearImage {margin:5px;}
+		.downloads{width:200px; margin:5px; border:2px solid cornflowerblue; }	
+		#download{width:100vw; }
+		td {text-align: center; vertical-align: middle;}
     </style>
   </head>
   <body>
@@ -42,6 +44,7 @@
 						</form>
 						<button id="clearImage" >back to camera</button>
 						</div>
+						<center><div id="download"></div></center>
 				</div>
 				
 				
@@ -59,7 +62,7 @@
 			
 				
 			var gameInstance = UnityLoader.instantiate("gameContainer", "Build/Aestatix-webGL-server-12-11-2017.json", {onProgress: UnityProgress});
-			console.log("UnityProgress" + UnityProgress);
+//			console.log("UnityProgress" + UnityProgress);
 		
         var options = {
 							beforeSubmit: showRequest, 
@@ -86,7 +89,8 @@
 				//send messesge to unity (c#) object in - pixelProcessing.cs
 				//gameInstance.SendMessage("object-name","function-name",value)
 //				gameInstance.SendMessage("UnityCamera", "ImageFromWebServer", responseText);
-				gameInstance.SendMessage("UnityCamera", "ImageFromWebServer",'http://localhost:3000/uploads/' + responseText);
+//				gameInstance.SendMessage("UnityCamera", "ImageFromWebServer",'http://localhost:3000/uploads/' + responseText);
+				gameInstance.SendMessage("UnityCamera", "ImageFromWebServer",'https://sci-crop.com/uploads/' + responseText);
 				$('#clearImage').attr("onclick", 'clearImage()');
 				$('#clearImage').show();
 //				alert('status: ' + statusText + '\n\nresponseText: \n' + responseText );
@@ -118,11 +122,20 @@
 				},2000);
 				
 		}
+		function download(url1,url2,url3){
+			let server = 'http://localhost:3000';
+//			let server = 'http://localhost:3000';
+			$('#download').html('');
+			
+//			$('#download').append('<img class="downloads" src="http://localhost:3000/uploads/' + url1 + '.jpeg" >');
+			$('#download').append('<table><tr><td><span>psyKrop smart image </span></td><td><span>psyKrop smart image with data </span></td><td><span>psyKrop smart image heatmap </span></td></tr><tr><td><a download="psyKrop-image.jpeg" href="' + server + '/uploads/' + url1 + '.jpeg" title="psyKrop smart image"><img class="downloads" alt="psyKrop smart image" src="' + server + '/uploads/' + url1 + '.jpeg"></a></td><td><a download="psyKrop-image-data.jpeg" href="' + server + '/uploads/' + url2 + '.jpeg" title="psyKrop smart image with data"><img class="downloads" alt="psyKrop image /w data" src="' + server + '/uploads/' + url2 + '.jpeg"></a></td><td><a download="psyKrop-image-heatmap.jpeg" href="' + server + '/uploads/' + url3 + '.jpeg" title="psyKrop heapmap image"><img class="downloads" alt="psyKrop heatmap image" src="' + server + '/uploads/' + url3 + '.jpeg"></a></td></td></table>');
+		}
 		function unityProgressDone(){
 						$('.ui-console').text('..still working');
 						$('.ui-console').fadeIn();
 		}
-	
+		
+
 </script>
 
   </body>

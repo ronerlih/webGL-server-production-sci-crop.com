@@ -1,4 +1,6 @@
 var devmode = true;
+var Iconv  = require('iconv').Iconv;
+var jpeg = require('jpeg-js');
 var express = require('express');
 var fileUpload = require('express-fileupload');
 var path = require('path');
@@ -11,6 +13,7 @@ var request = require('request');
 var cors = require('cors');
 var events = require('events');
 var multer = require('multer');
+var btoa = require('btoa');
 //var bodyParser = require('body-parser');
 //var xFrameOptions = require('x-frame-options');
 
@@ -20,10 +23,12 @@ var app = express();
 
 //view engin - ejs
 app.set('view engine','ejs');
-app.set('views', 'assets/views');
+app.set('views', __dirname + '/www/sci-crop.com/public_html/');
 //use
 app.use(cors({origin: '*'}));
 //app.use(fileUpload());
+//serve static
+app.use(express.static('www/sci-crop.com/public_html/'));
 
 
 //iframe header response options
@@ -39,6 +44,12 @@ var ownerName = 'Aestatix - webGL';
 
 //vars
 var lastImageName;
+let imageName;
+let imageDataName;
+let imageHeatmapName;
+let ACK_HTTP_CODE = 200;
+var width = 640, height = 480;
+var frameData = new Buffer(width * height * 4);
 //console.log("path: " + __dirname + '/www/sci-crop.com/public_html/');
 var options = {
     root: __dirname + '/www/sci-crop.com/public_html/',
@@ -69,13 +80,17 @@ var Storage = multer.diskStorage({
 //			 	console.log("file name:" + lastImageName);
          }
 				 
-//				 callback(null, "/www/sci-crop.com/public_html/uploads");
-				 callback(null, __dirname + "/www/sci-crop.com/public_html/uploads");
+				 if(devmode){
+				 	callback(null, __dirname + "/www/sci-crop.com/public_html/uploads");
+				 }else{
+					 callback(null, "./www/sci-crop.com/public_html/uploads");
+				 }
      },
    filename: function(req, file, callback) {
          callback(null, lastImageName);
      }
  });
+ 
 const upload = multer({ storage: Storage ,fileFilter: imageFilter}).single('img');
 
 //root-home route
@@ -97,7 +112,7 @@ app.post('/upload',  function (req, res, callback) {
 upload(req, res, function (err) {
 
 		if (err){
-      console.log(JSON.stringify(err));
+      console.log("err: " + err);
 //      res.status(400).send("fail saving image");
     } else {
 //		callback(console.log('callback: ' + lastImageName));
@@ -114,12 +129,74 @@ upload(req, res, function (err) {
 //    res.redirect('/');
 });
 
+//image from unity Upload
+app.put('/unityUpload',  function (req, res, callback) {
+
+	imageName = "photo"+ new Date().getMilliseconds();
+	var f=fs.createWriteStream(__dirname + '/www/sci-crop.com/public_html/uploads/' + imageName + '.jpeg');
+		req.on('data',(data) => {
+			f.write(data);
+		});
+		req.on('end',(data) => {
+			f.end();
+			console.log('image: ' + imageName + '.jpeg ready to download' );
+			 res.writeHead(200, {'Content-Type': 'text/plain', 
+			 							'imageName': imageName});
+			  res.write('image name: ' + imageName);
+			  res.end();
+			  
+			  setTimeout(function(){	fs.unlinkSync(__dirname + '/www/sci-crop.com/public_html/uploads/' + imageName + '.jpeg');
+							console.log('image '+ imageName+ ' earased');
+							},5000);
+		});
+});
+
+app.put('/unityUploadData',  function (req, res, callback) {
+
+	imageDataName = "photoData"+ new Date().getMilliseconds();
+	var f=fs.createWriteStream(__dirname + '/www/sci-crop.com/public_html/uploads/' +imageDataName + '.jpeg');
+		req.on('data',(data) => {
+			f.write(data);
+		});
+		req.on('end',(data) => {
+			f.end();
+			console.log('image: ' + imageDataName + '.jpeg ready to download' );
+			 res.writeHead(200, {'Content-Type': 'text/plain', 
+			 							'imageName': imageDataName});
+			  res.write('image name: ' + imageName);
+			  res.end();
+			  
+			  setTimeout(function(){	fs.unlinkSync(__dirname + '/www/sci-crop.com/public_html/uploads/' + imageDataName + '.jpeg');
+				console.log('image '+ imageDataName+ ' earased');
+				},5000);
+		});
+});
+
+app.put('/unityUploadHeatmap',  function (req, res, callback) {
+
+	imageHeatmapName = "photoHeatmap"+ new Date().getMilliseconds();
+	var f=fs.createWriteStream(__dirname + '/www/sci-crop.com/public_html/uploads/' +imageHeatmapName + '.jpeg');
+		req.on('data',(data) => {
+			f.write(data);
+		});
+		req.on('end',(data) => {
+			f.end();
+			console.log('image: ' + imageHeatmapName + '.jpeg ready to download' );
+			
+ 			res.writeHead(200, {'Content-Type': 'text/plain', 
+			 							'imageName': imageHeatmapName});
+			res.write('image name: ' + imageName);
+			res.end();		
+			
+			setTimeout(function(){	fs.unlinkSync(__dirname + '/www/sci-crop.com/public_html/uploads/' + imageHeatmapName + '.jpeg');
+				console.log('image '+ imageHeatmapName+ ' earased');
+				},5000);
+			});
+});
+
 //answer favicon request
 app.get('/favicon.ico', function (req, res) {
 }); 
-
-//serve static
-app.use(express.static('www/sci-crop.com/public_html/'));
 
 function logRequest(requestURL, requestQuary, requestIp){
 	now = new Date();
