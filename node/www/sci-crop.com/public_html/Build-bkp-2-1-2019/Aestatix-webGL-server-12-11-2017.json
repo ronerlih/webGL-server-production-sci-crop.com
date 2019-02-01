@@ -1,0 +1,12 @@
+{
+"companyName": "DefaultCompany",
+"productName": "AeStatix",
+"dataUrl": "Aestatix-webGL-server-12-11-2017.data.unityweb",
+"wasmCodeUrl": "Aestatix-webGL-server-12-11-2017.wasm.code.unityweb",
+"wasmFrameworkUrl": "Aestatix-webGL-server-12-11-2017.wasm.framework.unityweb",
+"TOTAL_MEMORY": 1073741824,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}
