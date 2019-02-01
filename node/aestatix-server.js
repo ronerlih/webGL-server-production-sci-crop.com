@@ -1,6 +1,4 @@
 var devmode = false;
-var Iconv  = require('iconv').Iconv;
-var jpeg = require('jpeg-js');
 var express = require('express');
 var fileUpload = require('express-fileupload');
 var path = require('path');
@@ -13,7 +11,6 @@ var request = require('request');
 var cors = require('cors');
 var events = require('events');
 var multer = require('multer');
-var btoa = require('btoa');
 //var bodyParser = require('body-parser');
 //var xFrameOptions = require('x-frame-options');
 
@@ -27,8 +24,6 @@ app.set('views', __dirname + '/www/sci-crop.com/public_html/');
 //use
 app.use(cors({origin: '*'}));
 //app.use(fileUpload());
-//serve static
-app.use(express.static('www/sci-crop.com/public_html/'));
 
 
 //iframe header response options
@@ -50,6 +45,7 @@ let imageHeatmapName;
 let ACK_HTTP_CODE = 200;
 var width = 640, height = 480;
 var frameData = new Buffer(width * height * 4);
+let twenty4HrsInMlsec = 360000 * 240;
 //console.log("path: " + __dirname + '/www/sci-crop.com/public_html/');
 var options = {
     root: __dirname + '/www/sci-crop.com/public_html/',
@@ -80,11 +76,11 @@ var Storage = multer.diskStorage({
 //			 	console.log("file name:" + lastImageName);
          }
 				 
-				 if(devmode){
-				 	callback(null, __dirname + "/www/sci-crop.com/public_html/uploads");
-				 }else{
+//				 if(devmode){
+//				 	callback(null, __dirname + "/www/sci-crop.com/public_html/uploads");
+//				 }else{
 					 callback(null, "./www/sci-crop.com/public_html/uploads");
-				 }
+//				 }
      },
    filename: function(req, file, callback) {
          callback(null, lastImageName);
@@ -95,6 +91,12 @@ const upload = multer({ storage: Storage ,fileFilter: imageFilter}).single('img'
 
 //root-home route
 app.get('/', function (req, res) {
+	//res.send("response..: Success!! ");
+	res.sendFile("login.html", options);
+	logRequest(req.protocol + '://' + req.get('host'),req.originalUrl,req.ip);
+});  
+//root-home route
+app.get('/login', function (req, res) {
 	//res.send("response..: Success!! ");
 	res.sendFile("index.html", options);
 	logRequest(req.protocol + '://' + req.get('host'),req.originalUrl,req.ip);
@@ -122,7 +124,7 @@ upload(req, res, function (err) {
 		setTimeout(
 			function(){	fs.unlinkSync(__dirname + '/www/sci-crop.com/public_html/uploads/' + lastImageName);
 							console.log('image '+ lastImageName+ ' earased');
-							},5000);
+							},360000 * 240);
 	 		}		
 	});
 //	console.log("req.file.originalname: " + lastImagePath.file);
@@ -147,7 +149,7 @@ app.put('/unityUpload',  function (req, res, callback) {
 			  
 			  setTimeout(function(){	fs.unlinkSync(__dirname + '/www/sci-crop.com/public_html/uploads/' + imageName + '.jpeg');
 							console.log('image '+ imageName+ ' earased');
-							},5000);
+							},twenty4HrsInMlsec);
 		});
 });
 
@@ -168,7 +170,7 @@ app.put('/unityUploadData',  function (req, res, callback) {
 			  
 			  setTimeout(function(){	fs.unlinkSync(__dirname + '/www/sci-crop.com/public_html/uploads/' + imageDataName + '.jpeg');
 				console.log('image '+ imageDataName+ ' earased');
-				},5000);
+				},twenty4HrsInMlsec);
 		});
 });
 
@@ -190,13 +192,16 @@ app.put('/unityUploadHeatmap',  function (req, res, callback) {
 			
 			setTimeout(function(){	fs.unlinkSync(__dirname + '/www/sci-crop.com/public_html/uploads/' + imageHeatmapName + '.jpeg');
 				console.log('image '+ imageHeatmapName+ ' earased');
-				},5000);
+				},twenty4HrsInMlsec);
 			});
 });
 
 //answer favicon request
 app.get('/favicon.ico', function (req, res) {
 }); 
+
+//serve static
+app.use(express.static('www/sci-crop.com/public_html/'));
 
 function logRequest(requestURL, requestQuary, requestIp){
 	now = new Date();

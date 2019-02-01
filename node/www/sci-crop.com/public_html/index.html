@@ -17,7 +17,7 @@
     </script>
 -->
     <style>
-      body{color:cornflowerblue; margin:0;padding:0;}
+      body{color:cornflowerblue; margin:0;padding:0;font-family: sans-serif;}
 			#gameContainer{border:  2px solid cornflowerblue !important; 
 			transform: scale(1) ; margin:auto;}
 		.center{margin:auto!important;}
@@ -26,9 +26,16 @@
 		.downloads{width:200px; margin:5px; border:2px solid cornflowerblue; }	
 		#download{width:100vw; }
 		td {text-align: center; vertical-align: middle;}
+		hr{width: 50%;
+    background: cornflowerblue;
+    height: 1px;
+    margin-top: 5px!important;
+    margin-bottom: 5px!important	;}
+	 td span{font-size: 13px;}
     </style>
   </head>
   <body>
+
 				<span class="ui-console"> still working</span>
 
 		<div class="webgl-content"  style="margin-top:60px;" >
@@ -39,8 +46,10 @@
 				<div class="upload-container">
 						<div id="file-upload" class="disabledElement">
 						<form id="frmUploader" enctype="multipart/form-data" action="/upload" method="post">
-							<input type="file" name="img" /><br>
-							<input type="submit" name="submit" id="btnSubmit" value="upload" /> 
+							<lable>
+								<input type="file" name="img" onclick="showDownload()"/><br>
+							</lable>
+							<input type="submit" class="disabledElement" name="submit" id="btnSubmit" value="upload" /> 
 						</form>
 						<button id="clearImage" >back to camera</button>
 						</div>
@@ -59,7 +68,6 @@
 
 //    $(document).ready(function() {
 			$('#clearImage').hide();
-			
 				
 			var gameInstance = UnityLoader.instantiate("gameContainer", "Build/Aestatix-webGL-server-12-11-2017.json", {onProgress: UnityProgress});
 //			console.log("UnityProgress" + UnityProgress);
@@ -128,13 +136,16 @@
 			$('#download').html('');
 			
 //			$('#download').append('<img class="downloads" src="http://localhost:3000/uploads/' + url1 + '.jpeg" >');
-			$('#download').append('<table><tr><td><span>psyKrop smart image </span></td><td><span>psyKrop smart image with data </span></td><td><span>psyKrop smart image heatmap </span></td></tr><tr><td><a download="psyKrop-image.jpeg" href="' + server + '/uploads/' + url1 + '.jpeg" title="psyKrop smart image"><img class="downloads" alt="psyKrop smart image" src="' + server + '/uploads/' + url1 + '.jpeg"></a></td><td><a download="psyKrop-image-data.jpeg" href="' + server + '/uploads/' + url2 + '.jpeg" title="psyKrop smart image with data"><img class="downloads" alt="psyKrop image /w data" src="' + server + '/uploads/' + url2 + '.jpeg"></a></td><td><a download="psyKrop-image-heatmap.jpeg" href="' + server + '/uploads/' + url3 + '.jpeg" title="psyKrop heapmap image"><img class="downloads" alt="psyKrop heatmap image" src="' + server + '/uploads/' + url3 + '.jpeg"></a></td></td></table>');
+			$('#download').append('<div>click to download</div><hr><table><tr><td><span>psyKrop smart image </span></td><td><span>psyKrop smart image with data </span></td><td><span>psyKrop smart image heatmap </span></td></tr><tr><td><a download="psyKrop-image.jpeg" href="' + server + '/uploads/' + url1 + '.jpeg" title="psyKrop smart image"><img class="downloads" alt="psyKrop smart image" src="' + server + '/uploads/' + url1 + '.jpeg"></a></td><td><a download="psyKrop-image-data.jpeg" href="' + server + '/uploads/' + url2 + '.jpeg" title="psyKrop smart image with data"><img class="downloads" alt="psyKrop image /w data" src="' + server + '/uploads/' + url2 + '.jpeg"></a></td><td><a download="psyKrop-image-heatmap.jpeg" href="' + server + '/uploads/' + url3 + '.jpeg" title="psyKrop heapmap image"><img class="downloads" alt="psyKrop heatmap image" src="' + server + '/uploads/' + url3 + '.jpeg"></a></td></td></table>');
 		}
 		function unityProgressDone(){
 						$('.ui-console').text('..still working');
 						$('.ui-console').fadeIn();
 		}
 		
+		function showDownload(){
+					$('#btnSubmit').removeClass('disabledElement');
+		}
 
 </script>
 
